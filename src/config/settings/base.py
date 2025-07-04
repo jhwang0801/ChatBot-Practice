@@ -1,17 +1,19 @@
 import datetime
+import os
 from pathlib import Path
 
 from dotenv import load_dotenv
 from gunicorn.http import wsgi
 
-load_dotenv()
-
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
+dotenv_path = os.path.join(BASE_DIR, ".env")
+load_dotenv(dotenv_path)
 
-PROJECT_NAME = "#{PROJECT_NAME}"
-SITE_NAME = "#{PROJECT_NAME}"
+
+PROJECT_NAME = "ChatBot"
+SITE_NAME = "ChatBot"
 SITE_LOGO = "img/logo.png"  # app/staticfiles/static/img/logo.png 변경
 DOMAIN = "domain.com"
 
@@ -28,19 +30,9 @@ wsgi.Response = Response
 LOCAL_APPS = [
     "app.staticfile",
     "app.common.apps.CommonConfig",
-    "app.chat.apps.ChatConfig",
-    "app.message.apps.MessageConfig",
-    "app.device.apps.DeviceConfig",
     "app.user.apps.UserConfig",
-    "app.withdrawal_user.apps.WithdrawalUserConfig",
-    "app.verifier.apps.VerifierConfig",
-    "app.alarmtalk_log.apps.AlarmTalkLogConfig",
-    "app.email_log.apps.EmailLogConfig",
-    "app.push_log.apps.PushLogConfig",
-    "app.sms_log.apps.SmsLogConfig",
-    "app.celery_log.apps.CeleryLogConfig",
-    "app.presigned_url.apps.PreSignedUrlConfig",
-    "app.websocket_connection.apps.WebsocketConnectionConfig",
+    "app.chat_bot.apps.ChatBotConfig",
+    "app.knowledge_document.apps.KnowledgeDocumentConfig",
 ]
 
 THIRD_PARTY_APPS = [
@@ -280,7 +272,7 @@ CELERY_TIMEZONE = "Asia/Seoul"
 CELERYD_SOFT_TIME_LIMIT = 300
 CELERYD_TIME_LIMIT = CELERYD_SOFT_TIME_LIMIT + 60
 CELERY_TASK_ACKS_LATE = True
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_BACKEND = "django-db"
 CELERY_WORKER_MAX_TASKS_PER_CHILD = 500
 
 # KAKAO
@@ -311,3 +303,8 @@ APPLE_CLIENT_SECRET = """-----BEGIN PRIVATE KEY-----
 APPLE_KEY_ID = "**"
 APPLE_TEAM_ID = "**"
 APPLE_LOGIN_URL = "https://appleid.apple.com/auth/authorize?response_type=code&client_id={apple_client_id}&redirect_uri={SOCIAL_REDIRECT_URL}&state=apple"
+
+
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+VECTOR_STORE_PATH = BASE_DIR / "vector_store"
+os.makedirs(VECTOR_STORE_PATH, exist_ok=True)

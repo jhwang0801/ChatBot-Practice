@@ -7,7 +7,6 @@ from django.utils import timezone
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from app.common.models import BaseModel, BaseModelMixin
-from app.device.models import Device
 
 
 class UserManager(DjangoUserManager):
@@ -66,8 +65,6 @@ class User(BaseUser):
     def get_token(self):
         return RefreshToken.for_user(self)
 
-    def connect_device(self, uid, token):
-        Device.objects.update_or_create(uid=uid, defaults={"user": self, "token": token})
 
     def disconnect_device(self, uid):
         self.device_set.filter(uid=uid).delete()

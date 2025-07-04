@@ -16,11 +16,9 @@ from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from app.email_log.models import EmailLog
-from app.user.models import Device, SocialKindChoices, User
+from app.user.models import SocialKindChoices, User
 from app.user.social_adapters import SocialAdapter
 from app.user.validators import validate_password
-from app.verifier.models import EmailVerifier, PhoneVerifier
 from config.exception_handler import SocialUserNotFoundError
 
 
@@ -30,19 +28,9 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["id", "email", "phone"]
 
 
-class DeviceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Device
-        fields = ["uid", "token"]
-        extra_kwargs = {
-            "uid": {"validators": None},
-        }
-
-
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.EmailField(write_only=True)
     password = serializers.CharField(write_only=True)
-    device = DeviceSerializer(required=False, write_only=True, allow_null=True, help_text="모바일앱에서만 사용합니다.")
     access_token = serializers.CharField(read_only=True)
     refresh_token = serializers.CharField(read_only=True)
 
@@ -112,7 +100,9 @@ class UserSocialLoginSerializer(serializers.Serializer):
     def get_social_user_id(self, code, access_token, state):
         for adapter_class in SocialAdapter.__subclasses__():
             if adapter_class.key == state:
-                return adapter_class(code, access_token, self.context["request"].META["HTTP_ORIGIN"]).get_social_user_id()
+                return adapter_class(
+                    code, access_token, self.context["request"].META["HTTP_ORIGIN"]
+                ).get_social_user_id()
         raise ModuleNotFoundError(f"{state.capitalize()}Adapter class")
 
 
@@ -228,12 +218,6 @@ class UserPasswordResetSerializer(serializers.Serializer):
             "protocol": "https" if request.is_secure() else "http",
         }
         content = loader.render_to_string("password_reset_email.html", context)
-        email_log = EmailLog.objects.create(
-            to_set=[user.email],
-            title=subject,
-            content=content,
-        )
-        email_log.send()
 
 
 class UserPasswordResetConfirmSerializer(serializers.Serializer):

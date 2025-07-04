@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import include, path
+from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularJSONAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 from config.schedules import SCHEDULES
@@ -11,6 +12,7 @@ api_urlpatterns = [
     path("", include("app.urls.api")),
     path("_health/", lambda request: HttpResponse()),
     path("admin/", admin.site.urls),
+    path("chat/", TemplateView.as_view(template_name="chat.html"), name="chat_page"),
 ]
 
 

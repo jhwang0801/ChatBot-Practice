@@ -71,7 +71,7 @@ pycurl==7.44.1
 PyJWT==2.8.0
 pyparsing==3.1.2
 python-dateutil==2.9.0.post0
-python-dotenv==0.20.0
+python-dotenv==0.21.0
 pytz==2024.1
 PyYAML==6.0.1
 referencing==0.35.1
@@ -91,3 +91,12 @@ urllib3==1.26.18
 vine==5.1.0
 watchtower==3.0.0
 wcwidth==0.2.13
+langchain==0.3.25
+langchain-community==0.3.25
+langchain-core==0.3.65
+langchain-openai==0.3.24
+langchain-text-splitters==0.3.8
+langsmith==0.3.45
+pandas==2.3.0
+numpy==2.3.0
+chromadb==1.0.12

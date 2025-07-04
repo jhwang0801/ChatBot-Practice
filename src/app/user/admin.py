@@ -1,10 +1,6 @@
 from django.contrib import admin
 
-from app.user.models import Device, User
-
-
-class DeviceInline(admin.TabularInline):
-    model = Device
+from app.user.models import User
 
 
 @admin.register(User)
@@ -28,8 +24,3 @@ class UserAdmin(admin.ModelAdmin):
         instance.save()
 
         return instance
-
-
-@admin.register(Device)
-class Device(admin.ModelAdmin):
-    pass
